@@ -28,6 +28,7 @@ class GameController < ApplicationController
     render :nothing => true
   end
   
+
   def create_character
     if request.post?
       if current_player.update_attributes(:avatar => params['avatar']) 
@@ -38,11 +39,19 @@ class GameController < ApplicationController
       end
     end
   end
+
+  def attack
+    attack_location = current_player.pre_move(params[:direction])
+    victim = Player.at(*attack_location)
+    send_cmd "remove_player(#{victim.id})" unless victim.nil?
+    render :nothing => true
+  end
   
   private
   
   def move_player(direction)
-    return if Map.load('map1').solid_tile?(*current_player.pre_move(direction))
+    new_location = current_player.pre_move(direction)
+    return if Map.load('map1').solid_tile?(*new_location) || Player.in?(*new_location)
     current_player.move(direction)
     send_cmd draw_player
   end
