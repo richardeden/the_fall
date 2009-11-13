@@ -48,9 +48,20 @@ function draw_tile(x,y,tile) {
   }
 }
 
-function draw_player(x, y, avatar) {
-  ctx.fillStyle = avatar;
-  rect(x * tile_w, y * tile_h, tile_w, tile_h);
+function draw_player(id, x, y, avatar) {
+  var player = $('#player_' + id);
+  if (!player.length) {
+    player = $('#blank_player').clone();
+    player[0].id = 'player_' + id;
+    player.addClass(avatar)
+    $('#game').append(player);
+  }
+  player.css('top', (y * tile_h)+'px');
+  player.css('left', (x * tile_w)+'px');
+}
+
+function remove_player(id) {
+  $('#player_' + id).remove();
 }
 
 function clear_tile(x, y) {

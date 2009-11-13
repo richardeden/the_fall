@@ -1,0 +1,22 @@
+#game {
+  position: relative;
+}
+
+#blank_player {
+  display: none;
+}
+
+.player {
+  position: absolute;
+  width: 32px;
+  height: 32px;
+  background: url(/images/characters.gif);
+}
+
+.preist {
+  background-position: 0 0;
+}
+
+.warrior {
+  background-position: 32px 0;
+}

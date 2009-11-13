@@ -14,7 +14,7 @@ class GameController < ApplicationController
   
   def leave
     current_player.update_attributes(:active => false)
-    send_cmd clear_player
+    send_cmd "remove_player(#{player.id})"
     redirect_to root_path
   end    
   
@@ -24,7 +24,7 @@ class GameController < ApplicationController
   end
   
   def move
-    send_cmd move_player params[:direction]
+    move_player params[:direction]
     render :nothing => true
   end
   
@@ -35,19 +35,13 @@ class GameController < ApplicationController
   private
   
   def move_player(direction)
-    puts  current_player.pre_move(direction).inspect
     return if Map.load('map1').solid_tile?(*current_player.pre_move(direction))
-    cmds = clear_player
     current_player.move(direction)
-    cmds << draw_player
+    send_cmd draw_player
   end
   
   def draw_player
     "draw_player(#{current_player.data});"
-  end
-  
-  def clear_player
-    "clear_tile(#{current_player.x}, #{current_player.y});"
   end
 
   def send_cmd(cmd)
