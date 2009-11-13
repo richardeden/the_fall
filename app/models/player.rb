@@ -15,7 +15,7 @@ class Player < ActiveRecord::Base
   end
   
   def data
-    "#{id}, #{x}, #{y}, '#{avatar}'"
+    to_json
   end
   
   def pre_move(direction)
@@ -36,5 +36,9 @@ class Player < ActiveRecord::Base
   
   def in?(x, y)
     self.x == x && self.y == y
+  end
+  
+  def dead?
+    health <= 0
   end
 end

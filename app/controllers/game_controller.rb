@@ -4,6 +4,7 @@ class GameController < ApplicationController
     if request.post?
       session[:player_id] = Player.find_or_create(params['name']).id
       current_player.update_attributes(:active => true)
+      current_player.update_attributes(:health => 100) if current_player.dead?
       if current_player.avatar.nil?
         redirect_to :action => :create_character
       else
@@ -14,17 +15,17 @@ class GameController < ApplicationController
   
   def leave
     current_player.update_attributes(:active => false)
-    send_cmd "remove_player(#{current_player.id})"
+    send_cmd "remove_player(#{current_player.id}); " + "activity('#{current_player.name} left the game');"
     redirect_to root_path
   end    
   
   def board
     @map = Map.load('map1')
-    send_cmd draw_player
+    send_cmd draw_player + "activity('#{current_player.name} joined the game');"
   end
   
   def move
-    move_player params[:direction]
+    move_player params[:direction] unless current_player.dead?
     render :nothing => true
   end
   
@@ -43,7 +44,16 @@ class GameController < ApplicationController
   def attack
     attack_location = current_player.pre_move(params[:direction])
     victim = Player.at(*attack_location)
-    send_cmd "remove_player(#{victim.id})" unless victim.nil?
+    unless victim.nil?
+      victim.health -= current_player.strength
+      if victim.dead?
+        victim.active = false
+        send_cmd player_dead(victim)
+      else
+        send_cmd draw_player(victim) + "activity('#{current_player.name} attacked #{victim.name}');"
+      end
+      victim.save
+    end
     render :nothing => true
   end
   
@@ -56,8 +66,12 @@ class GameController < ApplicationController
     send_cmd draw_player
   end
   
-  def draw_player
-    "draw_player(#{current_player.data});"
+  def draw_player(player=current_player)
+    "draw_player(#{player.data});"
+  end
+  
+  def player_dead(player)
+    "player_dead(#{player.id}); activity('<b>#{current_player.name} killed #{player.name}</b>');"
   end
 
   def send_cmd(cmd)

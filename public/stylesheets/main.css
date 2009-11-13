@@ -1,22 +1,38 @@
+body {
+  background: black;
+  color: #dddddd;
+}
+
 #game {
   position: relative;
+  float: left;
+  margin-right: 10px;
 }
 
 #blank_player {
   display: none;
 }
 
+#activity {
+  height: 300px;
+  overflow: scroll;
+}
+
+.player_data li {
+  list-style: none;
+}
+
 .player {
   position: absolute;
   width: 32px;
   height: 32px;
-  background: url(/images/characters.gif);
+  background: url(/images/characters.png);
 }
 
 .character_selection {
   width: 32px;
   height: 32px;
-  background: url(/images/characters.gif);
+  background: url(/images/characters.png);
 }
 
 .priest {

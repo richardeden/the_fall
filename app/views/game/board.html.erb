@@ -1,8 +1,10 @@
-<h2>Player: <%= current_player.name %></h2>
+<h2><%= current_player.name %><span class="player <%= current_player.avatar %>"></span></h2>
 <div id='game'>
-  <canvas id='game_window' width='800' height='500'></canvas>
+  <canvas id='game_window' width='800' height='512'></canvas>
 </div>
-  <div id='blank_player' class='player'></div>
+
+<div id='blank_player' class='player'></div>
+
 <script>
   function draw_map() {
     <%= render :partial => 'draw_tile.js', :collection => @map.tile_list %>
@@ -13,5 +15,16 @@
     <% end %>
   }
 </script>
+<div id='player_data_<%= current_player.id%>' class='player_data'>
+  <ul>
+    <% %w{health strength}.each do |stat| %>
+      <li>
+        <%= stat.titleize %>: <span id='<%= stat %>' class ='stats'>x</span>
+      </li>
+    <% end %>
+  </ul>
+</div>
+<div id='activity'></div>
+<%= link_to 'Leave the game', '/game/leave' %>
 <%= javascript_include_tag 'game_window' %>
 <%= juggernaut %>
