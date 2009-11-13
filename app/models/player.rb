@@ -6,7 +6,7 @@ class Player < ActiveRecord::Base
   end
   
   def data
-    "#{x}, #{y}, '#{avatar}'"
+    "#{id}, #{x}, #{y}, '#{avatar}'"
   end
   
   def pre_move(direction)

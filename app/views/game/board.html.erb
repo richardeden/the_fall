@@ -1,5 +1,8 @@
 <h2>Player: <%= current_player.name %></h2>
-<canvas id='game_window' width='800' height='500'></canvas>
+<div id='game'>
+  <canvas id='game_window' width='800' height='500'></canvas>
+</div>
+  <div id='blank_player' class='player'></div>
 <script>
   function draw_map() {
     <%= render :partial => 'draw_tile.js', :collection => @map.tile_list %>

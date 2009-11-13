@@ -1,0 +1,13 @@
+#game {
+  position: relative;
+}
+
+#blank_player {
+  display: none;
+}
+
+.player {
+  position: absolute;
+  width: 30px;
+  height: 30px;
+}
