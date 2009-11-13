@@ -27,7 +27,8 @@ class GameController < ApplicationController
   private
   
   def move_player(direction)
-    return if Map.load('map1').solid_tile?(*current_player.pre_move(direction))
+    new_location = current_player.pre_move(direction)
+    return if Map.load('map1').solid_tile?(*new_location) || Player.in?(*new_location)
     current_player.move(direction)
     send_cmd draw_player
   end

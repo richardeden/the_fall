@@ -5,6 +5,10 @@ class Player < ActiveRecord::Base
     find_by_name(name) || create(:name => name, :x => 2, :y => 2)
   end
   
+  def self.in?(x, y)
+    active.any?{|player| player.in?(x,y)}
+  end
+  
   def data
     "#{id}, #{x}, #{y}, '#{avatar}'"
   end
@@ -23,5 +27,9 @@ class Player < ActiveRecord::Base
   def move(direction)
     self.x, self.y = pre_move(direction)
     self.save
+  end
+  
+  def in?(x, y)
+    self.x == x && self.y == y
   end
 end
