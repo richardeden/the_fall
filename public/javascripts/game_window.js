@@ -5,12 +5,23 @@ var ctx;
 var WIDTH;
 var HEIGHT;
 
+var tile_w = 32;
+var tile_h = 32;
+
 
 function rect(x,y,w,h) {
   ctx.beginPath();
   ctx.rect(x,y,w,h);
   ctx.closePath();
   ctx.fill();
+}
+
+function line(x,y,x2,y2) {
+  ctx.beginPath();
+  ctx.moveTo(x,y);
+  ctx.lineTo(x2,y2);
+  ctx.closePath();
+  ctx.stroke();
 }
 
 function clear() {
@@ -22,13 +33,39 @@ function init() {
   ctx = $('#game_window')[0].getContext("2d");
   WIDTH = $("#game_window").width()
   HEIGHT = $("#game_window").height()
-  return setInterval(draw, 10);
+  clear();
+  draw_map();
+  setup_map();
 }
 
-//Main draw function
-function draw() {
-  clear();
-  rect(10, 10, 10, 15);
+function draw_tile(x,y,tile) {
+  x = x * tile_w;
+  y = y * tile_h;
+  switch (tile) {
+    case '|': line(x+16,y, x+16,y+tile_h);break;
+    case '-': line(x,y+16, x+tile_w,y+16);break;
+    case '+': line(x,y+16, x+tile_w,y+16); line(x+16,y, x+16,y+tile_h); break;
+  }
 }
+
+function draw_player(x, y, avatar) {
+  ctx.fillStyle = avatar;
+  rect(x * tile_w, y * tile_h, tile_w, tile_h);
+}
+
+function clear_tile(x, y) {
+  ctx.clearRect(x * tile_w, y * tile_h, tile_w, tile_h);
+}
+
+$(document).keydown(function(evt) {
+  console.log(evt.keyCode);
+  switch (evt.keyCode) {
+    case 38: $.post('/game/move', {direction: 'north'});break;
+    case 40: $.post('/game/move', {direction: 'south'});break;
+    case 37: $.post('/game/move', {direction: 'west'});break;
+    case 39: $.post('/game/move', {direction: 'east'});break;
+  }
+});
+
 
 init();

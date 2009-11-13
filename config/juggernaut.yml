@@ -3,16 +3,16 @@
 # 
 
 development:
-  :allowed_ips: 
-              - 127.0.0.1
+  # :allowed_ips: 
+  #              - 127.0.0.1
   :port: 5001
 production:
-  :allowed_ips: 
-              - 127.0.0.1
+  # :allowed_ips: 
+  #               - 127.0.0.1
   :port: 5001
 test:
-  :allowed_ips: 
-              - 127.0.0.1
+  # :allowed_ips: 
+  #               - 127.0.0.1
   :port: 5001
 
 # Common options:  
@@ -97,6 +97,7 @@ test:
 # Parameters passed are session_id and client_id.
 # 
 # :logout_url: http://localhost:3000/sessions/juggernaut_logout
+:logout_url: http://penryn:3000/game/leave
 
 # === Miscellaneous ===
 

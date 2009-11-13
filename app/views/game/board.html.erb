@@ -1,4 +1,14 @@
-<h2>Game</h2>
+<h2>Player: <%= current_player.name %></h2>
 <canvas id='game_window' width='800' height='500'></canvas>
+<script>
+  function draw_map() {
+    <%= render :partial => 'draw_tile.js', :collection => @map.tile_list %>
+  }
+  function setup_map() {
+    <% Player.active.each do |player| %>
+      draw_player(<%= player.data %>);
+    <% end %>
+  }
+</script>
 <%= javascript_include_tag 'game_window' %>
 <%= juggernaut %>
