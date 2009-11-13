@@ -68,13 +68,15 @@ function clear_tile(x, y) {
   ctx.clearRect(x * tile_w, y * tile_h, tile_w, tile_h);
 }
 
-$(document).keydown(function(evt) {
-  console.log(evt.keyCode);
+$(document).keypress(function(evt) {
+  console.log(evt);
+  command = 'move';
+  if (evt.shiftKey) {command = 'attack'};
   switch (evt.keyCode) {
-    case 38: $.post('/game/move', {direction: 'north'});break;
-    case 40: $.post('/game/move', {direction: 'south'});break;
-    case 37: $.post('/game/move', {direction: 'west'});break;
-    case 39: $.post('/game/move', {direction: 'east'});break;
+    case 38: $.post('/game/'+command, {direction: 'north'});break;
+    case 40: $.post('/game/'+command, {direction: 'south'});break;
+    case 37: $.post('/game/'+command, {direction: 'west'});break;
+    case 39: $.post('/game/'+command, {direction: 'east'});break;
   }
 });
 

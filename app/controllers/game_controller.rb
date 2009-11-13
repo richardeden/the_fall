@@ -24,6 +24,13 @@ class GameController < ApplicationController
     render :nothing => true
   end
   
+  def attack
+    attack_location = current_player.pre_move(params[:direction])
+    victim = Player.at(*attack_location)
+    send_cmd "remove_player(#{victim.id})" unless victim.nil?
+    render :nothing => true
+  end
+  
   private
   
   def move_player(direction)
