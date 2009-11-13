@@ -48,16 +48,26 @@ function draw_tile(x,y,tile) {
   }
 }
 
-function draw_player(id, x, y, avatar) {
+function draw_player(data) {
+  data = data['player'];
+  var id = data['id'];
   var player = $('#player_' + id);
   if (!player.length) {
     player = $('#blank_player').clone();
     player[0].id = 'player_' + id;
-    player.addClass(avatar)
+    player.addClass(data['avatar'])
     $('#game').append(player);
   }
-  player.css('top', (y * tile_h)+'px');
-  player.css('left', (x * tile_w)+'px');
+  player.css('top', (data['y'] * tile_h)+'px');
+  player.css('left', (data['x'] * tile_w)+'px');
+  $('#player_data_'+id+' .stats').each(function(){
+    $(this).text(data[$(this).attr('id')]);
+  });
+}
+
+function player_dead(player_id) {
+  remove_player(player_id);
+  $('#player_data_'+player_id+' #health').text('DEAD!');
 }
 
 function remove_player(id) {
@@ -69,7 +79,6 @@ function clear_tile(x, y) {
 }
 
 $(document).keypress(function(evt) {
-  console.log(evt);
   command = 'move';
   if (evt.shiftKey) {command = 'attack'};
   switch (evt.keyCode) {

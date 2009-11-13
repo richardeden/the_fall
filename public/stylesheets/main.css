@@ -1,5 +1,6 @@
 #game {
   position: relative;
+  float: left;
 }
 
 #blank_player {
