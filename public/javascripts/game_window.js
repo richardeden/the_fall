@@ -28,6 +28,10 @@ function clear() {
   ctx.clearRect(0, 0, WIDTH, HEIGHT);
 }
 
+function get_player(id) {
+  return $('#player_'+id)
+}
+
 //Login stuff here
 function init() {
   ctx = $('#game_window')[0].getContext("2d");
@@ -51,7 +55,7 @@ function draw_tile(x,y,tile) {
 function draw_player(data) {
   data = data['player'];
   var id = data['id'];
-  var player = $('#player_' + id);
+  var player = get_player(id);
   if (!player.length) {
     player = $('#blank_player').clone();
     player[0].id = 'player_' + id;
@@ -65,13 +69,22 @@ function draw_player(data) {
   });
 }
 
+var dead_player_img = new Image();
+dead_player_img.src = '/images/skeleton.png';
+
 function player_dead(player_id) {
+  player_pos = get_player(player_id).position();
+  ctx.drawImage(dead_player_img, player_pos.left, player_pos.top);
   remove_player(player_id);
   $('#player_data_'+player_id+' #health').text('DEAD!');
 }
 
 function remove_player(id) {
   $('#player_' + id).remove();
+}
+
+function activity(text) {
+  $('#activity').prepend('<p>'+text+'</p>')
 }
 
 function clear_tile(x, y) {

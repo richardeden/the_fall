@@ -7,17 +7,22 @@
   display: none;
 }
 
+#activity {
+  height: 300px;
+  overflow: scroll;
+}
+
 .player {
   position: absolute;
   width: 32px;
   height: 32px;
-  background: url(/images/characters.gif);
+  background: url(/images/characters.png);
 }
 
 .character_selection {
   width: 32px;
   height: 32px;
-  background: url(/images/characters.gif);
+  background: url(/images/characters.png);
 }
 
 .priest {

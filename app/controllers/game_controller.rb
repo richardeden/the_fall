@@ -15,13 +15,13 @@ class GameController < ApplicationController
   
   def leave
     current_player.update_attributes(:active => false)
-    send_cmd "remove_player(#{current_player.id})"
+    send_cmd "remove_player(#{current_player.id}); " + "activity('#{current_player.name} left the game');"
     redirect_to root_path
   end    
   
   def board
     @map = Map.load('map1')
-    send_cmd draw_player
+    send_cmd draw_player + "activity('#{current_player.name} joined the game');"
   end
   
   def move
@@ -50,7 +50,7 @@ class GameController < ApplicationController
         victim.active = false
         send_cmd player_dead(victim)
       else
-        send_cmd draw_player(victim)
+        send_cmd draw_player(victim) + "activity('#{current_player.name} attacked #{victim.name}');"
       end
       victim.save
     end
@@ -71,7 +71,7 @@ class GameController < ApplicationController
   end
   
   def player_dead(player)
-    "player_dead(#{player.id});"
+    "player_dead(#{player.id}); activity('<b>#{current_player.name} killed #{player.name}</b>');"
   end
 
   def send_cmd(cmd)
