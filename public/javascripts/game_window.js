@@ -53,7 +53,7 @@ function draw_player(id, x, y, avatar) {
   if (!player.length) {
     player = $('#blank_player').clone();
     player[0].id = 'player_' + id;
-    player.css('background', avatar)
+    player.addClass(avatar)
     $('#game').append(player);
   }
   player.css('top', (y * tile_h)+'px');
