@@ -8,3 +8,9 @@ require 'rake/testtask'
 require 'rake/rdoctask'
 
 require 'tasks/rails'
+
+begin 
+  require 'juggernaut/rails/tasks'
+rescue Exception => e
+  puts 'Juggernaut Load Error' + e.message
+end
