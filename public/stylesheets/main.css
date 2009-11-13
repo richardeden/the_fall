@@ -1,6 +1,12 @@
+body {
+  background: black;
+  color: #dddddd;
+}
+
 #game {
   position: relative;
   float: left;
+  margin-right: 10px;
 }
 
 #blank_player {
@@ -10,6 +16,10 @@
 #activity {
   height: 300px;
   overflow: scroll;
+}
+
+.player_data li {
+  list-style: none;
 }
 
 .player {

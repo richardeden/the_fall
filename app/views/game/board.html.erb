@@ -1,6 +1,6 @@
-<h2>Player: <%= current_player.name %></h2>
+<h2><%= current_player.name %><span class="player <%= current_player.avatar %>"></span></h2>
 <div id='game'>
-  <canvas id='game_window' width='800' height='500'></canvas>
+  <canvas id='game_window' width='800' height='512'></canvas>
 </div>
 
 <div id='blank_player' class='player'></div>
@@ -15,7 +15,7 @@
     <% end %>
   }
 </script>
-<div id='player_data_<%= current_player.id%>'>
+<div id='player_data_<%= current_player.id%>' class='player_data'>
   <ul>
     <% %w{health strength}.each do |stat| %>
       <li>

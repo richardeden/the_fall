@@ -8,6 +8,12 @@ var HEIGHT;
 var tile_w = 32;
 var tile_h = 32;
 
+var dead_player_img = new Image();
+dead_player_img.src = '/images/skeleton.png';
+
+var wall = new Image();
+wall.src = '/images/brick_wall.png';
+
 
 function rect(x,y,w,h) {
   ctx.beginPath();
@@ -25,7 +31,10 @@ function line(x,y,x2,y2) {
 }
 
 function clear() {
+  ctx.fillStyle = '#000000';
   ctx.clearRect(0, 0, WIDTH, HEIGHT);
+  rect(0, 0, WIDTH, HEIGHT);
+  ctx.fill();
 }
 
 function get_player(id) {
@@ -46,9 +55,13 @@ function draw_tile(x,y,tile) {
   x = x * tile_w;
   y = y * tile_h;
   switch (tile) {
-    case '|': line(x+16,y, x+16,y+tile_h);break;
-    case '-': line(x,y+16, x+tile_w,y+16);break;
-    case '+': line(x,y+16, x+tile_w,y+16); line(x+16,y, x+16,y+tile_h); break;
+    case '|':
+    case '-':
+    case '+':ctx.drawImage(wall, x, y);
+      
+    //case '|': line(x+16,y, x+16,y+tile_h);break;
+    //case '-': line(x,y+16, x+tile_w,y+16);break;
+    //case '+': line(x,y+16, x+tile_w,y+16); line(x+16,y, x+16,y+tile_h); break;
   }
 }
 
@@ -68,9 +81,6 @@ function draw_player(data) {
     $(this).text(data[$(this).attr('id')]);
   });
 }
-
-var dead_player_img = new Image();
-dead_player_img.src = '/images/skeleton.png';
 
 function player_dead(player_id) {
   player_pos = get_player(player_id).position();
