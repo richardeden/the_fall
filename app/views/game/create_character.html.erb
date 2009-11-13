@@ -1,0 +1,8 @@
+<h2>Welcome to Eden, <%= current_player.name %></h2>
+
+<% form_tag do %>
+  <%= label_tag image_tag('paladin.png') %>
+  <%= radio_button_tag :avatar, 'paladin' %> Paladin
+  
+  <%= label_tag image_tag %>
+<% end %>

@@ -2,6 +2,9 @@
 # == Juggernaut Server Configuration
 # 
 
+<% SERVER = "localhost" %>
+<% PORT = "3000" %>
+<% HOST = "#{SERVER}:#{PORT}" %>
 development:
   # :allowed_ips: 
   #              - 127.0.0.1
@@ -97,7 +100,7 @@ test:
 # Parameters passed are session_id and client_id.
 # 
 # :logout_url: http://localhost:3000/sessions/juggernaut_logout
-:logout_url: http://penryn:3000/game/leave
+:logout_url: http://<%= HOST %>/game/leave
 
 # === Miscellaneous ===
 

@@ -4,7 +4,11 @@ class GameController < ApplicationController
     if request.post?
       session[:player_id] = Player.find_or_create(params['name']).id
       current_player.update_attributes(:active => true)
-      redirect_to :action => :board
+      if current_player.avatar.nil?
+        redirect_to :action => :create_character
+      else
+        redirect_to :action => :board
+      end
     end
   end
   
@@ -22,6 +26,10 @@ class GameController < ApplicationController
   def move
     send_cmd move_player params[:direction]
     render :nothing => true
+  end
+  
+  def create_character
+    
   end
   
   private
