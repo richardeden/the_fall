@@ -9,13 +9,19 @@ class Player < ActiveRecord::Base
     "#{x}, #{y}, '#{avatar}'"
   end
   
-  def move(direction)
+  def pre_move(direction)
+    x, y = self.x, self.y
     case direction
-    when 'north' : self.y -= 1
-    when 'south' : self.y += 1
-    when 'east' : self.x += 1
-    when 'west' : self.x -= 1
+    when 'north' : y -= 1
+    when 'south' : y += 1
+    when 'east' : x += 1
+    when 'west' : x -= 1
     end
+    [x, y]
+  end
+  
+  def move(direction)
+    self.x, self.y = pre_move(direction)
     self.save
   end
 end

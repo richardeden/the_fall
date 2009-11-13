@@ -9,7 +9,7 @@ class ApplicationController < ActionController::Base
   # filter_parameter_logging :password
 
   def current_player
-    session[:player]
+    Player.find(session[:player_id])
   end
   helper_method :current_player
 end

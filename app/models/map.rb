@@ -18,4 +18,8 @@ class Map
     tiles
   end
   
+  def solid_tile?(x, y)
+    %w{| - +}.include? @data[y][x]
+  end
+  
 end

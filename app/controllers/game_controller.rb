@@ -2,7 +2,7 @@ class GameController < ApplicationController
 
   def login
     if request.post?
-      session[:player] = Player.find_or_create(params['name'])
+      session[:player_id] = Player.find_or_create(params['name']).id
       current_player.update_attributes(:active => true)
       redirect_to :action => :board
     end
@@ -27,6 +27,8 @@ class GameController < ApplicationController
   private
   
   def move_player(direction)
+    puts  current_player.pre_move(direction).inspect
+    return if Map.load('map1').solid_tile?(*current_player.pre_move(direction))
     cmds = clear_player
     current_player.move(direction)
     cmds << draw_player
