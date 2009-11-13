@@ -13,10 +13,32 @@
   background: url(/images/characters.gif);
 }
 
-.preist {
+.character_selection {
+  width: 32px;
+  height: 32px;
+  background: url(/images/characters.gif);
+}
+
+.priest {
   background-position: 0 0;
 }
 
-.warrior {
-  background-position: 32px 0;
+.paladin {
+  background-position: 160px 0;
+}
+
+.dwarf {
+  background-position: 160px 192px;
+}
+
+.mage {
+  background-position: 192px 0;
+}
+
+.orc {
+  background-position: 32px 32px;
+}
+
+.ranger {
+  background-position: 64px 256px;
 }

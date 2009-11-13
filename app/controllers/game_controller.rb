@@ -14,7 +14,7 @@ class GameController < ApplicationController
   
   def leave
     current_player.update_attributes(:active => false)
-    send_cmd "remove_player(#{player.id})"
+    send_cmd "remove_player(#{current_player.id})"
     redirect_to root_path
   end    
   
@@ -29,7 +29,14 @@ class GameController < ApplicationController
   end
   
   def create_character
-    
+    if request.post?
+      if current_player.update_attributes(:avatar => params['avatar']) 
+        redirect_to :action => :board
+      else
+        flash[:error] = "Character could not be created."
+        redirect_to :action => create_character
+      end
+    end
   end
   
   private

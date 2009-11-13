@@ -1,8 +1,11 @@
-<h2>Welcome to Eden, <%= current_player.name %></h2>
-
+<% characters = ['priest', 'paladin', 'dwarf', 'mage', 'orc', 'ranger'] %>
+<h2> Character Select </h2>
 <% form_tag do %>
-  <%= label_tag image_tag('paladin.png') %>
-  <%= radio_button_tag :avatar, 'paladin' %> Paladin
-  
-  <%= label_tag image_tag %>
+  <% characters.each do |character| %>
+    <div class="character_selection <%= character %>"></div>
+    <%= radio_button_tag :avatar, character %> <%= character.titleize %>
+  <% end %>
+  <p>
+    <%= submit_tag 'Create character' %>
+  </p>
 <% end %>
