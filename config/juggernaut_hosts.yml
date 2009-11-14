@@ -11,8 +11,8 @@
 
 :hosts:
   - :port: 5001
-    :host: penryn
-    :public_host: penryn
+    :host: localhost
+    :public_host: localhost
     :public_port: 5001
     # :secret_key: your_secret_key
     # :environment: :development
