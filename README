@@ -1,3 +1,10 @@
 :: The Fall ::
 
 Rails MUD created using Javascript and Juggernaut. Developed at Eden Development by Richard Patching and Tristan Harris during the Eden Hackday (code something cool in a day :)
+
+:: Requirements ::
+
+Juggernaut_Rails - http://github.com/kjvarga/juggernaut_rails
+
+To start the Juggernaut server:
+  - rake juggernaut:start
