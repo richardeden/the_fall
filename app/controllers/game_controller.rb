@@ -1,5 +1,8 @@
 class GameController < ApplicationController
-
+  
+  def index
+  end
+  
   def login
     if request.post?
       session[:player_id] = Player.find_or_create(params['name']).id
