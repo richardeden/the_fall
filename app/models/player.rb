@@ -15,7 +15,10 @@ class Player < ActiveRecord::Base
   end
   
   def data
-    to_json
+    [:id, :avatar, :x, :y, :strength, :health].inject({}) do |hash, field| 
+      hash[field] = self.send(field)
+      hash
+    end
   end
   
   def pre_move(direction)

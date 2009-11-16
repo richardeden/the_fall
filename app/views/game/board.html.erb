@@ -11,7 +11,7 @@
   }
   function setup_map() {
     <% Player.active.each do |player| %>
-      draw_player(<%= player.data %>);
+      command_handler('draw_player', <%= player.data.to_json %>);
     <% end %>
   }
 </script>
@@ -24,7 +24,8 @@
     <% end %>
   </ul>
 </div>
+<textarea></textarea>
 <div id='activity'></div>
 <%= link_to 'Leave the game', '/game/leave' %>
 <%= javascript_include_tag 'game_window' %>
-<%= juggernaut %>
+<%= juggernaut :debug => false %>

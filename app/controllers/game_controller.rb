@@ -18,20 +18,21 @@ class GameController < ApplicationController
   
   def leave
     current_player.update_attributes(:active => false)
-    send_cmd "remove_player(#{current_player.id}); " + "activity('#{current_player.name} left the game');"
+    send_cmd Api.leave(current_player)
     redirect_to root_path
   end    
   
   def board
     @map = Map.load('map1')
-    send_cmd draw_player + "activity('#{current_player.name} joined the game');"
+    send_cmd Api.new_player(current_player)
   end
   
   def move
-    move_player params[:direction] unless current_player.dead?
-    render :nothing => true
+    render :nothing => true if current_player.dead?
+    cmd = Api.move_player(current_player, params[:direction])
+    send_cmd cmd
+    render :json => cmd
   end
-  
 
   def create_character
     if request.post?
@@ -51,9 +52,9 @@ class GameController < ApplicationController
       victim.health -= current_player.strength
       if victim.dead?
         victim.active = false
-        send_cmd player_dead(victim)
+        send_cmd Api.player_dead(victim, current_player)
       else
-        send_cmd draw_player(victim) + "activity('#{current_player.name} attacked #{victim.name}');"
+        send_cmd Api.attack(victim, current_player)
       end
       victim.save
     end
@@ -62,23 +63,8 @@ class GameController < ApplicationController
   
   private
   
-  def move_player(direction)
-    new_location = current_player.pre_move(direction)
-    return if Map.load('map1').solid_tile?(*new_location) || Player.in?(*new_location)
-    current_player.move(direction)
-    send_cmd draw_player
-  end
-  
-  def draw_player(player=current_player)
-    "draw_player(#{player.data});"
-  end
-  
-  def player_dead(player)
-    "player_dead(#{player.id}); activity('<b>#{current_player.name} killed #{player.name}</b>');"
-  end
-
-  def send_cmd(cmd)
-    Juggernaut.send_to_all cmd
+  def send_cmd(cmds)
+    Juggernaut.send_to_all cmds.to_json
   end
   
 end

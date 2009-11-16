@@ -5,3 +5,6 @@ db/schema.rb
 config/juggernaut.yml
 config/juggernaut_hosts.yml
 config/database.yml
+*~
+.*.swp
+

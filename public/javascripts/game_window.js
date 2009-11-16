@@ -66,7 +66,6 @@ function draw_tile(x,y,tile) {
 }
 
 function draw_player(data) {
-  data = data['player'];
   var id = data['id'];
   var player = get_player(id);
   if (!player.length) {
@@ -104,13 +103,41 @@ function clear_tile(x, y) {
 $(document).keypress(function(evt) {
   command = 'move';
   if (evt.shiftKey) {command = 'attack'};
+  console.log(evt.keyCode);
   switch (evt.keyCode) {
-    case 38: $.post('/game/'+command, {direction: 'north'});break;
-    case 40: $.post('/game/'+command, {direction: 'south'});break;
-    case 37: $.post('/game/'+command, {direction: 'west'});break;
-    case 39: $.post('/game/'+command, {direction: 'east'});break;
+    case 38: action(command, {direction: 'north'});break;
+    case 40: action(command, {direction: 'south'});break;
+    case 37: action(command, {direction: 'west'});break;
+    case 39: action(command, {direction: 'east'});break;
+    default: return;
   }
+  return false;
 });
 
+function api_handler(cmds) {
+  if (cmds == null) return;
+  $(cmds).each(function(){
+    command_handler(this['command'], this['data']);
+  });
+}
+
+function action(command, data) {
+  $.post('/game/'+command, data, api_handler, 'json');
+}
+
+Juggernaut.fn.dispatchMessage = function(msg) {
+  var json = eval('('+msg.body+')');
+  api_handler(json);
+}
+
+function command_handler(command, data) {
+  switch (command) {
+    case 'draw_player': draw_player(data);break;
+    case 'activity': activity(data);break;
+    case 'player_dead': player_dead(data);break;
+    case 'remove_player': remove_player(data);break;
+    default: activity('Unknown command: ' + command);
+  }
+}
 
 init();
