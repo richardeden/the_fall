@@ -1,5 +1,9 @@
 class Api
   class << self
+    def map(map)
+      command('map', map.data)
+    end
+
     def new_player(player)
       draw_player(player) +
       activity("#{player.name} joined the game")

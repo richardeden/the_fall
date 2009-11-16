@@ -100,10 +100,17 @@ function clear_tile(x, y) {
   ctx.clearRect(x * tile_w, y * tile_h, tile_w, tile_h);
 }
 
+function set_map(map) {
+  $(map).each(function(r) {
+    $(this).each(function(c) {
+      draw_tile(c,r, this[0]);
+    });
+  });
+}
+
 $(document).keypress(function(evt) {
   command = 'move';
   if (evt.shiftKey) {command = 'attack'};
-  console.log(evt.keyCode);
   switch (evt.keyCode) {
     case 38: action(command, {direction: 'north'});break;
     case 40: action(command, {direction: 'south'});break;
@@ -136,6 +143,7 @@ function command_handler(command, data) {
     case 'activity': activity(data);break;
     case 'player_dead': player_dead(data);break;
     case 'remove_player': remove_player(data);break;
+    case 'map': set_map(data);break;
     default: activity('Unknown command: ' + command);
   }
 }

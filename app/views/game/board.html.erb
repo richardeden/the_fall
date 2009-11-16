@@ -7,11 +7,11 @@
 
 <script>
   function draw_map() {
-    <%= render :partial => 'draw_tile.js', :collection => @map.tile_list %>
+    <%= embed_cmd Api.map(@map) %>
   }
   function setup_map() {
     <% Player.active.each do |player| %>
-      command_handler('draw_player', <%= player.data.to_json %>);
+      <%= embed_cmd Api.draw_player player %>
     <% end %>
   }
 </script>
