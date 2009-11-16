@@ -18,6 +18,11 @@ body {
   overflow: scroll;
 }
 
+#user_nav {
+  float:right;
+  font-size:12px;
+}
+
 .player_data li {
   list-style: none;
 }
