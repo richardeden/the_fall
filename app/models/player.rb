@@ -3,7 +3,7 @@ class Player < ActiveRecord::Base
   named_scope :at_location, lambda {|x, y| {:conditions => {:x => x, :y => y}}}
   
   def self.find_or_create(name)
-    find_by_name(name) || create(:name => name, :x => 2, :y => 2)
+    find_by_name(name) || create(:name => name, :x => 2, :y => 2, :health => 100, :strength => 10)
   end
   
   def self.in?(x, y)
