@@ -23,8 +23,15 @@ class GameController < ApplicationController
   end    
   
   def board
-    @map = Map.load('map1')
+  end
+
+  def join
+    cmds = Api.map(Map.load('map1'))
+    Player.active.each do |p|
+      cmds += Api.draw_player(p)
+    end
     send_cmd Api.new_player(current_player)
+    render :json => cmds
   end
   
   def move

@@ -5,16 +5,6 @@
 
 <div id='blank_player' class='player'></div>
 
-<script>
-  function draw_map() {
-    <%= embed_cmd Api.map(@map) %>
-  }
-  function setup_map() {
-    <% Player.active.each do |player| %>
-      <%= embed_cmd Api.draw_player player %>
-    <% end %>
-  }
-</script>
 <div id='player_data_<%= current_player.id%>' class='player_data'>
   <ul>
     <% %w{health strength}.each do |stat| %>

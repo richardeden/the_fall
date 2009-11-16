@@ -47,8 +47,7 @@ function init() {
   WIDTH = $("#game_window").width()
   HEIGHT = $("#game_window").height()
   clear();
-  draw_map();
-  setup_map();
+  action('join', {})
 }
 
 function draw_tile(x,y,tile) {
@@ -148,4 +147,4 @@ function command_handler(command, data) {
   }
 }
 
-init();
+$(document).ready(init);
