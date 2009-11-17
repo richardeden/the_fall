@@ -47,7 +47,8 @@ function init() {
   WIDTH = $("#game_window").width()
   HEIGHT = $("#game_window").height()
   clear();
-  action('join', {})
+  action('join', {});
+  $(document).keypress(key_handler);
 }
 
 function draw_tile(x,y,tile) {
@@ -107,7 +108,7 @@ function set_map(map) {
   });
 }
 
-$(document).keypress(function(evt) {
+function key_handler(evt) {
   command = 'move';
   if (evt.shiftKey) {command = 'attack'};
   switch (evt.keyCode) {
@@ -118,7 +119,7 @@ $(document).keypress(function(evt) {
     default: return;
   }
   return false;
-});
+}
 
 function api_handler(cmds) {
   if (cmds == null) return;
@@ -147,4 +148,4 @@ function command_handler(command, data) {
   }
 }
 
-$(document).ready(init);
+$(document).bind('juggernaut:connect', init);
