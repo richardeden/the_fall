@@ -7,4 +7,4 @@ config/juggernaut_hosts.yml
 config/database.yml
 *~
 .*.swp
-
+*/.DS_Store
