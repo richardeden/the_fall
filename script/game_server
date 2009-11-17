@@ -17,6 +17,7 @@ ActiveRecord::Base.establish_connection(dbconfig['development'])
 
 class Connection < EventMachine::Connection
   attr_accessor :server
+  attr :current_player
 
   def receive_data data
     server.command self, data
@@ -24,13 +25,55 @@ class Connection < EventMachine::Connection
 
   def unbind
     server.disconnect(self)
+    leave({}) unless current_player.nil?
   end
 
   def send_cmd(cmds)
     return if cmds.nil?
     send_data cmds.map{|c| c.to_json}.join("\0") + "\0"
   end
-end
+
+
+  def subscribe(params)
+  end
+
+  def login(params)
+    @current_player = Player.find_or_create(params[:name])
+    current_player.update_attributes(:health => 100) if current_player.dead?
+  end
+
+  def join(params)
+    cmds = Api.map(Map.load('map1'))
+    current_player.update_attributes(:active => true)
+    Player.active.each do |p|
+      cmds += Api.draw_player(p)
+    end
+    server.send_cmd Api.new_player(current_player), :except => self
+    send_cmd cmds
+  end
+
+  def move(params)
+    return unless current_player.active?
+    server.send_cmd Api.move_player(current_player, params[:direction])
+  end
+
+  def attack(params)
+    victim = current_player.attack(params[:direction])
+    unless victim.nil?
+      if victim.dead?
+        server.send_cmd Api.player_dead(victim, current_player)
+      else
+        server.send_cmd Api.attack(victim, current_player)
+      end
+    end
+  end
+ 
+  def leave(params)
+    current_player.update_attributes(:active => false)
+    server.send_cmd Api.leave(current_player)
+  end    
+ 
+ end
 
 class Server
   attr :connections
@@ -64,7 +107,7 @@ class Server
   end
 
   def send_cmd(cmds, options={})
-    log 'outgoing: ' + cmds.inspect
+    log 'outgoing broadcast: ' + cmds.inspect
     connections.each do |client|
       next if options[:except] == client
       client.send_cmd cmds
@@ -85,54 +128,16 @@ class Server
       log 'bad data' + data.inspect
       return
     end
-    if %w{subscribe join move attack leave}.include?(data['command'])
+    if %w{subscribe join move attack leave login}.include?(data['command'])
       params = data['data'] || {}
-      params[:connection] = con
-      send(data['command'], params.symbolize_keys)
+      con.send(data['command'], params.symbolize_keys)
     else
       log "Invalid command: #{data['command']}"
     end
   end
-
-  def subscribe(params)
-  end
-
-  def join(params)
-    cmds = Api.map(Map.load('map1'))
-    Player.active.each do |p|
-      cmds += Api.draw_player(p)
-    end
-    send_cmd Api.new_player(current_player), :except => params[:connection]
-    params[:connection].send_cmd cmds
-  end
-
-  def move(params)
-    return unless current_player.active?
-    send_cmd Api.move_player(current_player, params[:direction])
-  end
-
-  def attack(params)
-    victim = current_player.attack(params[:direction])
-    unless victim.nil?
-      if victim.dead?
-        send_cmd Api.player_dead(victim, current_player)
-      else
-        send_cmd Api.attack(victim, current_player)
-      end
-    end
-  end
- 
-  def leave(params)
-    current_player.update_attributes(:active => false)
-    send_cmd Api.leave(current_player)
-  end    
- 
+  
   def log(text)
     puts text
-  end
-
-  def current_player
-    Player.first
   end
 
 end

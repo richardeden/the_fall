@@ -47,6 +47,7 @@ function init() {
   WIDTH = $("#game_window").width()
   HEIGHT = $("#game_window").height()
   clear();
+  action('login', {"name": $('#player_name').text()});
   action('join', {});
   $(document).keypress(key_handler);
 }

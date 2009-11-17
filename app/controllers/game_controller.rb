@@ -16,12 +16,6 @@ class GameController < ApplicationController
     end
   end
   
-  def leave
-    current_player.update_attributes(:active => false)
-    send_cmd Api.leave(current_player)
-    redirect_to root_path
-  end    
-  
   def board
   end
 

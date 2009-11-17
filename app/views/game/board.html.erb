@@ -5,7 +5,7 @@
 <div id='blank_player' class='player'></div>
 
 <h2>
-  <%= current_player.name %>
+  <span id='player_name'><%= current_player.name %></span>
   <span class="player <%= current_player.avatar %>"></span>
 </h2>
 <div id='player_data_<%= current_player.id%>' class='player_data'>
@@ -19,6 +19,5 @@
 </div>
 <textarea></textarea>
 <div id='activity'></div>
-<%= link_to 'Leave the game', '/game/leave' %>
 <%= javascript_include_tag 'game_window' %>
 <%= juggernaut :debug => true %>
