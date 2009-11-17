@@ -44,4 +44,16 @@ class Player < ActiveRecord::Base
   def dead?
     health <= 0
   end
+  
+  def attack(direction)
+    attack_location = pre_move(direction)
+    victim = Player.at(*attack_location)
+    unless victim.nil?
+      victim.health -= self.strength
+      victim.active = false if victim.dead?
+      victim.save
+    end
+    victim
+  end
+ 
 end

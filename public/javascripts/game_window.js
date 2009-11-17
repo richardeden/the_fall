@@ -129,12 +129,14 @@ function api_handler(cmds) {
 }
 
 function action(command, data) {
-  $.post('/game/'+command, data, api_handler, 'json');
+  //$.post('/game/'+command, data, api_handler, 'json');
+  juggernaut.sendData(Juggernaut.toJSON({"command": command, "data": data}));
 }
 
-Juggernaut.fn.dispatchMessage = function(msg) {
-  var json = eval('('+msg.body+')');
-  api_handler(json);
+Juggernaut.fn.receiveData = function(msg) {
+  msg = Juggernaut.parseJSON(unescape(msg.toString()));
+  console.log(msg);
+  api_handler(msg);
 }
 
 function command_handler(command, data) {
@@ -148,4 +150,4 @@ function command_handler(command, data) {
   }
 }
 
-$(document).bind('juggernaut:connect', init);
+$(document).bind('juggernaut:connected', init);

@@ -1,0 +1,153 @@
+#!/usr/bin/ruby
+require 'rubygems'
+require 'eventmachine'
+require 'optparse'
+require 'json'
+require 'yaml'
+
+require 'active_support'
+require 'active_record'
+
+ActiveSupport::Dependencies.load_paths << File.join(File.dirname(__FILE__), '..', 'app', 'models')
+RAILS_ROOT = File.join(File.dirname(__FILE__), '..')
+
+dbconfig = YAML::load(File.open(File.join(RAILS_ROOT, 'config', 'database.yml')))
+ActiveRecord::Base.establish_connection(dbconfig['development'])
+
+
+class Connection < EventMachine::Connection
+  attr_accessor :server
+
+  def receive_data data
+    server.command self, data
+  end
+
+  def unbind
+    server.disconnect(self)
+  end
+
+  def send_cmd(cmds)
+    return if cmds.nil?
+    send_data cmds.map{|c| c.to_json}.join("\0") + "\0"
+  end
+end
+
+class Server
+  attr :connections
+  
+  POLICY_REQUEST = "<policy-file-request/>"
+
+  POLICY_FILE = <<-EOF
+    <cross-domain-policy>
+    <allow-access-from domain="*" to-ports="PORT" />
+    </cross-domain-policy>
+  EOF
+
+  def initialize(options)
+    @options = options
+    @connections = []
+  end
+  
+  def run
+    EventMachine::run do
+      EventMachine::start_server "localhost", @options[:port], Connection do |con|
+        con.server = self
+        @connections << con
+      end
+      log "Listening on #{@options[:port]}"
+    end
+  end
+  
+  def disconnect(connection)
+    log 'disconnect'
+    @connections.delete connection
+  end
+
+  def send_cmd(cmds, options={})
+    log 'outgoing: ' + cmds.inspect
+    connections.each do |client|
+      next if options[:except] == client
+      client.send_cmd cmds
+    end
+  end
+
+  def command(con, data)
+    data = data.split("\0")[0]
+    log "incomming: #{data}"
+    if data == POLICY_REQUEST
+      con.send_data POLICY_FILE.gsub('PORT', @options[:port].to_s)
+      con.close_connection_after_writing
+      return
+    end
+    begin
+      data = JSON.parse(data)
+    rescue JSON::ParserError
+      log 'bad data' + data.inspect
+      return
+    end
+    if %w{subscribe join move attack leave}.include?(data['command'])
+      params = data['data'] || {}
+      params[:connection] = con
+      send(data['command'], params.symbolize_keys)
+    else
+      log "Invalid command: #{data['command']}"
+    end
+  end
+
+  def subscribe(params)
+  end
+
+  def join(params)
+    cmds = Api.map(Map.load('map1'))
+    Player.active.each do |p|
+      cmds += Api.draw_player(p)
+    end
+    send_cmd Api.new_player(current_player), :except => params[:connection]
+    params[:connection].send_cmd cmds
+  end
+
+  def move(params)
+    return unless current_player.active?
+    send_cmd Api.move_player(current_player, params[:direction])
+  end
+
+  def attack(params)
+    victim = current_player.attack(params[:direction])
+    unless victim.nil?
+      if victim.dead?
+        send_cmd Api.player_dead(victim, current_player)
+      else
+        send_cmd Api.attack(victim, current_player)
+      end
+    end
+  end
+ 
+  def leave(params)
+    current_player.update_attributes(:active => false)
+    send_cmd Api.leave(current_player)
+  end    
+ 
+  def log(text)
+    puts text
+  end
+
+  def current_player
+    Player.first
+  end
+
+end
+
+options = {}
+
+option_parser = OptionParser.new do |opts|
+  opts.banner = "Usage: server.rb [options]"
+
+  opts.on("-p", "--port port_number", "Set port number") do |p|
+    options[:port] = p
+  end
+end
+
+option_parser.parse!(ARGV)
+
+Server.new(options).run
+

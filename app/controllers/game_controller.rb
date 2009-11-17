@@ -53,17 +53,13 @@ class GameController < ApplicationController
   end
 
   def attack
-    attack_location = current_player.pre_move(params[:direction])
-    victim = Player.at(*attack_location)
+    victim = current_player.attack(params[:direction])
     unless victim.nil?
-      victim.health -= current_player.strength
       if victim.dead?
-        victim.active = false
         send_cmd Api.player_dead(victim, current_player)
       else
         send_cmd Api.attack(victim, current_player)
       end
-      victim.save
     end
     render :nothing => true
   end
