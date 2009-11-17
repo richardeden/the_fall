@@ -47,8 +47,8 @@ function init() {
   WIDTH = $("#game_window").width()
   HEIGHT = $("#game_window").height()
   clear();
-  draw_map();
-  setup_map();
+  action('join', {});
+  $(document).keypress(key_handler);
 }
 
 function draw_tile(x,y,tile) {
@@ -66,7 +66,6 @@ function draw_tile(x,y,tile) {
 }
 
 function draw_player(data) {
-  data = data['player'];
   var id = data['id'];
   var player = get_player(id);
   if (!player.length) {
@@ -101,16 +100,52 @@ function clear_tile(x, y) {
   ctx.clearRect(x * tile_w, y * tile_h, tile_w, tile_h);
 }
 
-$(document).keypress(function(evt) {
+function set_map(map) {
+  $(map).each(function(r) {
+    $(this).each(function(c) {
+      draw_tile(c,r, this[0]);
+    });
+  });
+}
+
+function key_handler(evt) {
   command = 'move';
   if (evt.shiftKey) {command = 'attack'};
   switch (evt.keyCode) {
-    case 38: $.post('/game/'+command, {direction: 'north'});break;
-    case 40: $.post('/game/'+command, {direction: 'south'});break;
-    case 37: $.post('/game/'+command, {direction: 'west'});break;
-    case 39: $.post('/game/'+command, {direction: 'east'});break;
+    case 38: action(command, {direction: 'north'});break;
+    case 40: action(command, {direction: 'south'});break;
+    case 37: action(command, {direction: 'west'});break;
+    case 39: action(command, {direction: 'east'});break;
+    default: return;
   }
-});
+  return false;
+}
 
+function api_handler(cmds) {
+  if (cmds == null) return;
+  $(cmds).each(function(){
+    command_handler(this['command'], this['data']);
+  });
+}
 
-init();
+function action(command, data) {
+  $.post('/game/'+command, data, api_handler, 'json');
+}
+
+Juggernaut.fn.dispatchMessage = function(msg) {
+  var json = eval('('+msg.body+')');
+  api_handler(json);
+}
+
+function command_handler(command, data) {
+  switch (command) {
+    case 'draw_player': draw_player(data);break;
+    case 'activity': activity(data);break;
+    case 'player_dead': player_dead(data);break;
+    case 'remove_player': remove_player(data);break;
+    case 'map': set_map(data);break;
+    default: activity('Unknown command: ' + command);
+  }
+}
+
+$(document).bind('juggernaut:connect', init);

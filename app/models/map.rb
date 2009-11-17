@@ -1,5 +1,6 @@
 class Map
-  
+  attr :data
+
   def self.load(name)
     self.new(File.readlines(File.join(RAILS_ROOT, 'app', 'maps', name + '.map')).map{|text| text.chop})
   end
@@ -21,5 +22,5 @@ class Map
   def solid_tile?(x, y)
     %w{| - +}.include? @data[y][x]
   end
-  
+
 end
