@@ -93,9 +93,10 @@ class Server
   
   def run
     EventMachine::run do
-      EventMachine::start_server "localhost", @options[:port], Connection do |con|
+      EventMachine::start_server '0.0.0.0', @options[:port], Connection do |con|
         con.server = self
         @connections << con
+        log 'connect'
       end
       log "Listening on #{@options[:port]}"
     end
@@ -122,18 +123,18 @@ class Server
         con.close_connection_after_writing
         return
       end
-    end
-    begin
-      data = JSON.parse(data)
-    rescue JSON::ParserError
-      log 'bad data:' + data.inspect
-      return
-    end
-    if %w{subscribe join move attack leave login}.include?(data['command'])
-      params = data['data'] || {}
-      con.send(data['command'], params.symbolize_keys)
-    else
-      log "Invalid command: #{data['command']}"
+      begin
+        data = JSON.parse(data)
+      rescue JSON::ParserError
+        log 'bad data:' + data.inspect
+        return
+      end
+      if %w{subscribe join move attack leave login}.include?(data['command'])
+        params = data['data'] || {}
+        con.send(data['command'], params.symbolize_keys)
+      else
+        log "Invalid command: #{data['command']}"
+      end
     end
   end
   
@@ -143,7 +144,7 @@ class Server
 
 end
 
-options = {}
+options = {:port => 5001}
 
 option_parser = OptionParser.new do |opts|
   opts.banner = "Usage: server.rb [options]"
