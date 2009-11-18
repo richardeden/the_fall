@@ -116,7 +116,7 @@ class Server
 
   def command(con, data)
     data = data.split("\0")[0]
-    log "incomming: #{data}"
+    log "incoming: #{data}"
     if data == POLICY_REQUEST
       con.send_data POLICY_FILE.gsub('PORT', @options[:port].to_s)
       con.close_connection_after_writing
@@ -125,7 +125,7 @@ class Server
     begin
       data = JSON.parse(data)
     rescue JSON::ParserError
-      log 'bad data' + data.inspect
+      log 'bad data:' + data.inspect
       return
     end
     if %w{subscribe join move attack leave login}.include?(data['command'])
