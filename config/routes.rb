@@ -4,8 +4,10 @@ ActionController::Routing::Routes.draw do |map|
   map.root :controller => 'game', :action => 'index'
   map.resources :users
   map.resources :user_sessions
+  map.resources :players
   map.login "login", :controller => 'user_sessions', :action => 'new'
   map.logout "logout", :controller => 'user_sessions', :action => 'destroy'
+  map.create_character "create_character", :controller => "players", :action => "new"
   
   
   # Sample of regular route:

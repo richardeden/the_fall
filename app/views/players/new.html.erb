@@ -1,0 +1,13 @@
+<% characters = ['priest', 'paladin', 'dwarf', 'mage', 'orc', 'ranger'] %>
+<h2>Create new player character</h2>
+<% form_for @player do |f| %>
+  <%= f.label :name %>
+  <%= f.text_field :name %>
+  <% characters.each do |character| %>
+    <%= f.label :avatar, character %>
+    <%= f.radio_button :avatar, character %>
+  <% end %>
+  <p>
+    <%= f.submit 'Create character' %>
+  </p>
+<% end %>
