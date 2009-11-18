@@ -115,12 +115,13 @@ class Server
   end
 
   def command(con, data)
-    data = data.split("\0")[0]
-    log "incoming: #{data}"
-    if data == POLICY_REQUEST
-      con.send_data POLICY_FILE.gsub('PORT', @options[:port].to_s)
-      con.close_connection_after_writing
-      return
+    data.split("\0").each do |data|
+      log "incoming: #{data}"
+      if data == POLICY_REQUEST
+        con.send_data POLICY_FILE.gsub('PORT', @options[:port].to_s)
+        con.close_connection_after_writing
+        return
+      end
     end
     begin
       data = JSON.parse(data)
