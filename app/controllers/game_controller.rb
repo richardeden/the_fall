@@ -41,17 +41,6 @@ class GameController < ApplicationController
     render :json => cmd
   end
 
-  def create_character
-    if request.post?
-      if current_player.update_attributes(:avatar => params['avatar']) 
-        redirect_to :action => :board
-      else
-        flash[:error] = "Character could not be created."
-        redirect_to :action => create_character
-      end
-    end
-  end
-
   def attack
     attack_location = current_player.pre_move(params[:direction])
     victim = Player.at(*attack_location)
