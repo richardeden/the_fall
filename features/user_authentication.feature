@@ -33,6 +33,15 @@ Feature: User authentication
     And I press "Submit"
     Then I should see "Password confirmation is too short (minimum is 4 characters)"
   
+  Scenario: User uses an invalid username
+    Given a user called "JoeBloggs"
+    When I go to the homepage
+    And I follow "Login"
+    And I fill in "Username" with "JoeExample"
+    And I fill in "Password" with "password123"
+    And I press "Login"
+    Then I should see "There were problems with the following fields:Username is not valid"
+  
   Scenario: User logs in
     Given a user called "JoeBloggs"
     When I go to the homepage

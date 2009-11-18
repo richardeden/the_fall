@@ -10,6 +10,10 @@ module NavigationHelpers
     
     when /the home\s?page/
       '/'
+    when /the main game page/
+      '/game/board'
+    when /the game index page/
+      root_path
     
     # Add more mappings here.
     # Here is a more fancy example:

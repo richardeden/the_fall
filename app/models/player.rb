@@ -1,6 +1,7 @@
 class Player < ActiveRecord::Base
   named_scope :active, :conditions => {:active => true}
   named_scope :at_location, lambda {|x, y| {:conditions => {:x => x, :y => y}}}
+  belongs_to :user
   
   def self.find_or_create(name)
     find_by_name(name) || create(:name => name, :x => 2, :y => 2, :health => 100, :strength => 10)

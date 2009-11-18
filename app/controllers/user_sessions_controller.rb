@@ -7,7 +7,11 @@ class UserSessionsController < ApplicationController
     @user_session = UserSession.new(params[:user_session])
     if @user_session.save
       flash[:notice] = "Successfully logged in."
-      redirect_to root_url
+      if current_user.players.empty?
+        redirect_to create_character_path
+      else
+        redirect_to root_url
+      end
     else
       render :action => 'new'
     end
@@ -16,7 +20,7 @@ class UserSessionsController < ApplicationController
   def destroy
     @user_session = UserSession.find
     @user_session.destroy
-    flash[:notice] = 'Session logged out.'
+    flash[:notice] = 'You have logged out.'
     redirect_to root_url
   end
 end
