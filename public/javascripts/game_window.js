@@ -44,12 +44,24 @@ function get_player(id) {
 //Login stuff here
 function init() {
   ctx = $('#game_window')[0].getContext("2d");
-  WIDTH = $("#game_window").width()
-  HEIGHT = $("#game_window").height()
+  WIDTH = $("#game_window").width();
+  HEIGHT = $("#game_window").height();
   clear();
-  action('login', {"name": $('#player_name').text()});
-  action('join', {});
+  $('#login input[type=submit]').click(login);
+  $('#pick_player input[type=submit]').click(join);
+  $('#welcome').hide();
+}
+
+function login() {
+  action('login', {"name": $('#username').val()});
+  $('#login').hide();
+}
+
+function join() {
+  var name = $('#player_list').val();
+  action('join', {"name": name});
   $(document).keypress(key_handler);
+  $('#pick_player').hide();
 }
 
 function draw_tile(x,y,tile) {
@@ -109,6 +121,19 @@ function set_map(map) {
   });
 }
 
+function player_list(players) {
+  var select = $('#player_list');
+  $(players).each(function(){
+    select.append($("<option></option>").text(this.name));
+  });
+}
+
+function i_am(data) {
+  $('#player_name').text(data.name);
+  $('#player_icon').addClass(data.avatar);
+  $('#player_data_x').attr('id', 'player_data_'+data.id); 
+}
+
 function key_handler(evt) {
   command = 'move';
   if (evt.shiftKey) {command = 'attack'};
@@ -147,6 +172,8 @@ function command_handler(command, data) {
     case 'player_dead': player_dead(data);break;
     case 'remove_player': remove_player(data);break;
     case 'map': set_map(data);break;
+    case 'player_list': player_list(data);break;
+    case 'you_are': i_am(data);break;
     default: activity('Unknown command: ' + command);
   }
 }

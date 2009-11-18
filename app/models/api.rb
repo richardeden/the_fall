@@ -34,13 +34,29 @@ class Api
       command('draw_player', player.data)
     end
     
+    def you_are(player)
+      command('you_are', data_hash(player, :name, :avatar, :id))
+    end
+    
     def player_dead(player,a)
       command('player_dead', player.id) + 
       activity("<b>#{a.name} killed #{player.name}</b>")
     end
 
+    def player_list(players)
+      data = players.map{|p| {:name => p.name, :avatar => p.avatar} }
+      command('player_list', data)
+    end
+
     def command(cmd, data)
       [{:command => cmd, :data => data}]
+    end
+
+    def data_hash(obj, *attrs)
+      attrs.inject({}) do |h, attr|
+        h[attr] = obj.send(attr)
+        h
+      end
     end
   end
 end

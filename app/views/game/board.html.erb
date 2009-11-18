@@ -5,10 +5,10 @@
 <div id='blank_player' class='player'></div>
 
 <h2>
-  <span id='player_name'><%= current_player.name %></span>
-  <span class="player <%= current_player.avatar %>"></span>
+  <span id='player_name'>XX</span>
+  <span id='player_icon' class="player"</span>
 </h2>
-<div id='player_data_<%= current_player.id%>' class='player_data'>
+<div id='player_data_x' class='player_data'>
   <ul>
     <% %w{health strength}.each do |stat| %>
       <li>
@@ -21,3 +21,22 @@
 <div id='activity'></div>
 <%= javascript_include_tag 'game_window' %>
 <%= juggernaut :debug => true %>
+
+<div id='pick_player' class='popup'>
+  <h2>Select player</h2>
+  <select id='player_list'>
+  </select>
+  <input type='submit' />
+</div>
+
+<div id='login' class='popup'>
+  <h2>Login</h2>
+  Username: <input id='username' />
+  <input type='submit' />
+</div>
+
+<div id='welcome' class='popup'>
+  <h2>Welcome</h2>
+  Loading...
+</div>
+

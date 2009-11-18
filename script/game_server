@@ -18,6 +18,7 @@ ActiveRecord::Base.establish_connection(dbconfig['development'])
 class Connection < EventMachine::Connection
   attr_accessor :server
   attr :current_player
+  attr :current_user
 
   def receive_data data
     server.command self, data
@@ -34,17 +35,23 @@ class Connection < EventMachine::Connection
   end
 
 
-  def subscribe(params)
-  end
-
   def login(params)
-    @current_player = Player.find_or_create(params[:name])
-    current_player.update_attributes(:health => 100) if current_player.dead?
+    @current_user = User.find_by_username(params[:name])
+    if current_user
+      send_cmd Api.player_list(current_user.players)
+    else
+      unbind
+    end
   end
 
   def join(params)
+    return unless current_user
+    @current_player = current_user.players.find_by_name(params[:name])
+    return unless current_player
+    current_player.update_attributes(:health => 100) if current_player.dead?
     cmds = Api.map(Map.load('map1'))
     current_player.update_attributes(:active => true)
+    cmds += Api.you_are(current_player)
     Player.active.each do |p|
       cmds += Api.draw_player(p)
     end
@@ -129,7 +136,7 @@ class Server
         log 'bad data:' + data.inspect
         return
       end
-      if %w{subscribe join move attack leave login}.include?(data['command'])
+      if %w{join move attack leave login}.include?(data['command'])
         params = data['data'] || {}
         con.send(data['command'], params.symbolize_keys)
       else
