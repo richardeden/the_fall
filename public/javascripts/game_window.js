@@ -14,9 +14,6 @@ dead_player_img.src = '/images/skeleton.png';
 var wall = new Image();
 wall.src = '/images/brick_wall.png';
 
-var progress_bar_val = 0;
-
-
 function rect(x,y,w,h) {
   ctx.beginPath();
   ctx.rect(x,y,w,h);
@@ -50,7 +47,6 @@ function init() {
   HEIGHT = $("#game_window").height();
   clear();
   $('#pick_player').hide();
-  //$('#login input[type=submit]').click(login);
   $('#pick_player input[type=submit]').click(join);
   $('#welcome').hide();
   $('#login').dialog('open');
