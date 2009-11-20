@@ -58,7 +58,6 @@ function init() {
 
 function login() {
   action('login', {"name": $('#username').val(), "password": $('#password').val()});
-  $('#login').hide();
 }
 
 function join() {
@@ -126,6 +125,8 @@ function set_map(map) {
 }
 
 function player_list(players) {
+  $('#login').dialog('close');
+  $('#pick_player').show();
   var select = $('#player_list');
   $(players).each(function(){
     select.append($("<option></option>").text(this.name));
