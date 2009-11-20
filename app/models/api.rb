@@ -47,6 +47,10 @@ class Api
       data = players.map{|p| {:name => p.name, :avatar => p.avatar} }
       command('player_list', data)
     end
+    
+    def incorrect_password
+      command('incorrect_password', nil)
+    end
 
     def command(cmd, data)
       [{:command => cmd, :data => data}]

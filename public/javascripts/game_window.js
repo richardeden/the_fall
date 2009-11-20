@@ -49,6 +49,7 @@ function init() {
   $('#pick_player').hide();
   $('#pick_player input[type=submit]').click(join);
   $('#welcome').hide();
+  $('#username_or_password_incorrect').hide();
   $('#login').dialog('open');
 }
 
@@ -175,6 +176,7 @@ function command_handler(command, data) {
     case 'map': set_map(data);break;
     case 'player_list': player_list(data);break;
     case 'you_are': i_am(data);break;
+    case 'incorrect_password':$('#username_or_password_incorrect').show();break;
     default: activity('Unknown command: ' + command);
   }
 }

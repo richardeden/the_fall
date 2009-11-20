@@ -28,6 +28,7 @@ class Connection < EventMachine::Connection
     if current_user && authenticated?(current_user, params[:password])
       send_cmd Api.player_list(current_user.players)
     else
+      server.send_cmd Api.incorrect_password
       unbind
     end
   end
