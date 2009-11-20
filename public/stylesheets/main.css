@@ -32,6 +32,11 @@ body {
   font-size:12px;
 }
 
+#username_or_password_incorrect {
+  font-size:11px;
+  color:red;
+}
+
 .player_data li {
   list-style: none;
 }

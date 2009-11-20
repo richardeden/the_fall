@@ -25,7 +25,6 @@ class Connection < EventMachine::Connection
 
   def login(params)
     @current_user = User.find_by_username(params[:name])
-    
     if current_user && authenticated?(current_user, params[:password])
       send_cmd Api.player_list(current_user.players)
     else
