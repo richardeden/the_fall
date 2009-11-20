@@ -9,8 +9,8 @@ require 'active_support'
 require 'active_record'
 
 require File.join(File.dirname(__FILE__), '../game_server/connection')
-
 ActiveSupport::Dependencies.load_paths << File.join(File.dirname(__FILE__), '..', 'app', 'models')
+
 RAILS_ROOT = File.join(File.dirname(__FILE__), '..')
 
 dbconfig = YAML::load(File.open(File.join(RAILS_ROOT, 'config', 'database.yml')))

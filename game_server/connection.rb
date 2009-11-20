@@ -1,6 +1,7 @@
 require 'rubygems'
 require 'eventmachine'
 require 'json'
+require 'authlogic'
 
 class Connection < EventMachine::Connection
   attr_accessor :server
@@ -24,11 +25,17 @@ class Connection < EventMachine::Connection
 
   def login(params)
     @current_user = User.find_by_username(params[:name])
-    if current_user
+    
+    if current_user && authenticated?(current_user, params[:password])
       send_cmd Api.player_list(current_user.players)
     else
       unbind
     end
+  end
+  
+  def authenticated?(user, password)
+    p = Authlogic::CryptoProviders::Sha512.encrypt(password, user.password_salt)
+    user.crypted_password == p
   end
 
   def join(params)

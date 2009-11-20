@@ -20,9 +20,9 @@
 </div>
 <textarea></textarea>
 <div id='activity'></div>
+
 <%= javascript_include_tag 'game_window' %>
 <%= juggernaut :debug => true %>
-
 <div id='pick_player' class='popup'>
   <h2>Select player</h2>
   <select id='player_list'>
@@ -30,11 +30,24 @@
   <input type='submit' />
 </div>
 
-<div id='login' class='popup'>
-  <h2>Login</h2>
-  Username: <input id='username' />
-  <input type='submit' />
+<div id='login' title='Login'>
+  <p>Username: <input class='text ui-widget-content ui-corner-all' id='username' /></p>
+  <p>Password: <input class='text ui-widget-content ui-corner-all' id='password'></p>
 </div>
+
+<script type="text/javascript">
+  $("#login").dialog({
+    bgiframe: true, autoOpen: false, height: 270, modal: true,
+    buttons:{
+      Login: function() {
+        login();
+        $(this).dialog('close');
+        $('#pick_player').show();
+      }
+    }
+  });
+</script>
+
 
 <div id='welcome' class='popup'>
   <h2>Welcome</h2>
