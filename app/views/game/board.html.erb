@@ -23,11 +23,9 @@
 
 <%= javascript_include_tag 'game_window' %>
 <%= juggernaut :debug => true %>
-<div id='pick_player' class='popup'>
-  <h2>Select player</h2>
-  <select id='player_list'>
-  </select>
-  <input type='submit' />
+<div id='pick_player' title='Select Player'>
+  <p><select id='player_list' class='ui-widget-content ui-corner-all'>
+  </select></p>
 </div>
 
 <div id='login' title='Login'>
@@ -37,6 +35,14 @@
 </div>
 
 <script type="text/javascript">
+  $("#pick_player").dialog({
+    bgiframe: true, autoOpen: false, height: 200, modal: true,
+    buttons:{
+      Select: function() {
+        join();
+      }
+    }
+  });
   $("#login").dialog({
     bgiframe: true, autoOpen: false, height: 290, modal: true,
     buttons:{

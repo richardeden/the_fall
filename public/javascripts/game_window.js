@@ -47,7 +47,6 @@ function init() {
   HEIGHT = $("#game_window").height();
   clear();
   $('#pick_player').hide();
-  $('#pick_player input[type=submit]').click(join);
   $('#welcome').hide();
   $('#username_or_password_incorrect').hide();
   $('#login').dialog('open');
@@ -61,7 +60,7 @@ function join() {
   var name = $('#player_list').val();
   action('join', {"name": name});
   $(document).keypress(key_handler);
-  $('#pick_player').hide();
+  $('#pick_player').dialog('close');
 }
 
 function draw_tile(x,y,tile) {
@@ -123,7 +122,7 @@ function set_map(map) {
 
 function player_list(players) {
   $('#login').dialog('close');
-  $('#pick_player').show();
+  $('#pick_player').dialog('open');
   var select = $('#player_list');
   $(players).each(function(){
     select.append($("<option></option>").text(this.name));
