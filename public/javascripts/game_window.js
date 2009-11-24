@@ -46,7 +46,6 @@ function init() {
   WIDTH = $("#game_window").width();
   HEIGHT = $("#game_window").height();
   clear();
-  $('#pick_player').hide();
   $('#welcome').hide();
   $('#username_or_password_incorrect').hide();
   $('#login').dialog('open');

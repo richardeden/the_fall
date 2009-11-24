@@ -35,14 +35,6 @@
 </div>
 
 <script type="text/javascript">
-  $("#pick_player").dialog({
-    bgiframe: true, autoOpen: false, height: 200, modal: true,
-    buttons:{
-      Select: function() {
-        join();
-      }
-    }
-  });
   $("#login").dialog({
     bgiframe: true, autoOpen: false, height: 290, modal: true,
     buttons:{
@@ -52,7 +44,16 @@
     }
   });
 </script>
-
+<script type="text/javascript">
+$("#pick_player").dialog({
+  bgiframe: true, autoOpen: false, height: 200, modal: true,
+  buttons:{
+    Select: function() {
+      join();
+    }
+  }
+});
+</script>
 
 <div id='welcome' class='popup'>
   <h2>Welcome</h2>
