@@ -1,89 +1,9 @@
 #!/usr/bin/ruby
 require 'rubygems'
-require 'eventmachine'
 require 'optparse'
-require 'json'
-require 'yaml'
-
-require 'active_support'
-require 'active_record'
 
 require File.join(File.dirname(__FILE__), '../game_server/connection')
-ActiveSupport::Dependencies.load_paths << File.join(File.dirname(__FILE__), '..', 'app', 'models')
-
-RAILS_ROOT = File.join(File.dirname(__FILE__), '..')
-
-dbconfig = YAML::load(File.open(File.join(RAILS_ROOT, 'config', 'database.yml')))
-ActiveRecord::Base.establish_connection(dbconfig['development'])
-
-class Server
-  attr :connections
-  
-  POLICY_REQUEST = "<policy-file-request/>"
-
-  POLICY_FILE = <<-EOF
-    <cross-domain-policy>
-    <allow-access-from domain="*" to-ports="PORT" />
-    </cross-domain-policy>
-  EOF
-
-  def initialize(options)
-    @options = options
-    @connections = []
-  end
-  
-  def run
-    EventMachine::run do
-      EventMachine::start_server '0.0.0.0', @options[:port], Connection do |con|
-        con.server = self
-        @connections << con
-        log 'connect'
-      end
-      log "Listening on #{@options[:port]}"
-    end
-  end
-  
-  def disconnect(connection)
-    log 'disconnect'
-    @connections.delete connection
-  end
-
-  def send_cmd(cmds, options={})
-    log 'outgoing broadcast: ' + cmds.inspect
-    connections.each do |client|
-      next if options[:except] == client
-      client.send_cmd cmds
-    end
-  end
-
-  def command(con, data)
-    data.split("\0").each do |data|
-      log "incoming: #{data}"
-      if data == POLICY_REQUEST
-        con.send_data POLICY_FILE.gsub('PORT', @options[:port].to_s)
-        con.close_connection_after_writing
-        return
-      end
-      begin
-        data = JSON.parse(data)
-      rescue JSON::ParserError
-        log 'bad data:' + data.inspect
-        return
-      end
-      if %w{join move attack leave login}.include?(data['command'])
-        params = data['data'] || {}
-        con.send(data['command'], params.symbolize_keys)
-      else
-        log "Invalid command: #{data['command']}"
-      end
-    end
-  end
-  
-  def log(text)
-    puts text
-  end
-
-end
+require File.join(File.dirname(__FILE__), '../game_server/server')
 
 options = {:port => 5001}
 
@@ -98,4 +18,3 @@ end
 option_parser.parse!(ARGV)
 
 Server.new(options).run
-
