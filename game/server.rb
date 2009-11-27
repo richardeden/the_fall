@@ -23,6 +23,10 @@ class Server
     end
   end
   
+  def log(text)
+    puts text
+  end
+  
   private
   
   def add_connection(connection)

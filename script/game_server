@@ -2,7 +2,7 @@
 require 'rubygems'
 require 'optparse'
 
-require File.join(File.dirname(__FILE__), '..', 'game_server', 'game_server')
+require File.join(File.dirname(__FILE__), '..', 'game', 'game_server')
 
 options = {:port => 5001}
 

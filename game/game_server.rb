@@ -56,8 +56,4 @@ class GameServer < Server
     end
   end
   
-  def log(text)
-    puts text
-  end
-
 end
