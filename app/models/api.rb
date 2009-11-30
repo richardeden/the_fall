@@ -51,6 +51,10 @@ class Api
     def incorrect_password
       command('incorrect_password', nil)
     end
+    
+    def stats(player)
+      command('stats', player)
+    end
 
     def command(cmd, data)
       [{:command => cmd, :data => data}]

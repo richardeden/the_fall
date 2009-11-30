@@ -16,4 +16,8 @@ function load_login_interface() {
       }
     }
   });
+  
+  $("#stats").dialog({
+    bgiframe: true, autoOpen: false, height: 350, modal: true
+  });
 }

@@ -69,10 +69,6 @@ function draw_tile(x,y,tile) {
     case '|':
     case '-':
     case '+':ctx.drawImage(wall, x, y);
-      
-    //case '|': line(x+16,y, x+16,y+tile_h);break;
-    //case '-': line(x,y+16, x+tile_w,y+16);break;
-    //case '+': line(x,y+16, x+tile_w,y+16); line(x+16,y, x+16,y+tile_h); break;
   }
 }
 
@@ -159,6 +155,21 @@ function action(command, data) {
   juggernaut.sendData(Juggernaut.toJSON({"command": command, "data": data}));
 }
 
+function get_stats() {
+  action('stats')
+}
+
+function show_stats(data) {
+  $('#stats').dialog('open');
+  $('#player_health').text(data.health);
+  $('#player_strength').text(data.strength);
+  $('#player_intelligence').text(data.intelligence);
+  $('#player_wisdom').text(data.wisdom);
+  $('#player_dexterity').text(data.dexterity);
+  $('#player_constitution').text(data.constitution);
+  $('#player_charisma').text(data.charisma);
+}
+
 Juggernaut.fn.receiveData = function(msg) {
   msg = Juggernaut.parseJSON(unescape(msg.toString()));
   console.log(msg);
@@ -175,6 +186,7 @@ function command_handler(command, data) {
     case 'player_list': player_list(data);break;
     case 'you_are': i_am(data);break;
     case 'incorrect_password':$('#username_or_password_incorrect').show();break;
+    case 'stats':show_stats(data);break;
     default: activity('Unknown command: ' + command);
   }
 }

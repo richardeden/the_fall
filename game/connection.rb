@@ -21,7 +21,10 @@ class Connection < EventMachine::Connection
     return if cmds.nil?
     send_data cmds.map{|c| c.to_json}.join("\0") + "\0"
   end
-
+  
+  def stats(params)
+    send_cmd Api.stats(current_player)
+  end
 
   def login(params)
     @current_user = User.find_by_username(params[:name])

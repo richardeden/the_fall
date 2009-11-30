@@ -47,7 +47,7 @@ class GameServer < Server
         log 'bad data:' + data.inspect
         return
       end
-      if %w{join move attack leave login}.include?(data['command'])
+      if %w{join move attack leave login stats}.include?(data['command'])
         params = data['data'] || {}
         con.send(data['command'], params.symbolize_keys)
       else

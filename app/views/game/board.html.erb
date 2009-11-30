@@ -7,17 +7,13 @@
 
 <h2>
   <span id='player_name'>XX</span>
-  <span id='player_icon' class="player"</span>
+  <span id='player_icon' class="player"/>
 </h2>
+
 <div id='player_data_x' class='player_data'>
-  <ul>
-    <% %w{health strength}.each do |stat| %>
-      <li>
-        <%= stat.titleize %>: <span id='<%= stat %>' class ='stats'>x</span>
-      </li>
-    <% end %>
-  </ul>
+  <%= link_to_function 'Stats', "get_stats();" %>
 </div>
+
 <textarea></textarea>
 <div id='activity'></div>
 
@@ -35,6 +31,16 @@
 <div id='welcome' class='popup'>
   <h2>Welcome</h2>
   Loading...
+</div>
+
+<div id='stats' title='Stats'>
+  <p>Health:<span id='player_health'>XX</span></p>
+  <p>Strength:<span id='player_strength'>XX</span></p>
+  <p>Intelligence:<span id='player_intelligence'>XX</span></p>
+  <p>Wisdom:<span id='player_wisdom'>XX</span></p>
+  <p>Dexterity:<span id='player_dexterity'>XX</span></p>
+  <p>Constitution:<span id='player_constitution'>XX</span></p>
+  <p>Charisma:<span id='player_charisma'>XX</span></p>
 </div>
 
 <script type='text/javascript'>
